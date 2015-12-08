@@ -4,30 +4,36 @@ import java.util.Properties;
 
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
+import javax.jms.DeliveryMode;
 import javax.jms.Destination;
 import javax.jms.ExceptionListener;
 import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageConsumer;
-import javax.jms.Queue;
+import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 
-import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.stereotype.Component;
 
-public class Service implements Runnable, ExceptionListener {
-	public static void main(String args[]) {
-		System.out.println("Send the messages....");
-		Thread thread = new Thread(new Service());
-		thread.start();
-	}
+@Component
+public class Client implements ExceptionListener {
+//	public static void main(String[] args) {
+//		byte b[] = new byte[256];
+//		System.out.print("Greet someone: ");
+//		try {
+//			int i = System.in.read(b);
+//			String greeting = new String(b, 0, i);
+//			Client client = new Client();
+//			client.sendAMessage(greeting);
+//		} catch (Exception e) {
+//			System.out.println("Type something or 'quit'");
+//		}
+//	}
 
-	public void run() {
+	public boolean sendAMessage(String greeting) {
 		try {
 
-			// Create a ConnectionFactory
 			Properties jndiParameters = new Properties();
 			jndiParameters.put(Context.INITIAL_CONTEXT_FACTORY, "org.apache.activemq.jndi.ActiveMQInitialContextFactory");
 			jndiParameters.put(Context.PROVIDER_URL, "tcp://localhost:61616");
@@ -38,41 +44,34 @@ public class Service implements Runnable, ExceptionListener {
 			// Create a Connection
 			Connection connection = connectionFactory.createConnection();
 			connection.start();
+
 			connection.setExceptionListener(this);
 
-			//			// Create a Session
+			// Create a Session
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
 
 			// Create a MessageConsumer from the Session to the Topic or Queue
-			MessageConsumer consumer = session.createConsumer(queue);
+			MessageProducer producer = session.createProducer(queue);
+			producer.setDeliveryMode(DeliveryMode.NON_PERSISTENT);
 
-			boolean dontQuit = true;
-			do {
-				// Wait for a message
-				Message message = consumer.receive();
+			String text = greeting + " From: " + Thread.currentThread().getName() + " : " + this.hashCode();
+			TextMessage message = session.createTextMessage(text);
 
-				if (message instanceof TextMessage) {
-					TextMessage textMessage = (TextMessage) message;
-					String text = textMessage.getText();
-					System.out.println("Received: " + text);
-					if (text != null && text.startsWith("quit")) {
-						dontQuit = false;
-					}
-				} else {
-					System.out.println("Received: " + message);
-				}
-			} while (dontQuit);
+			producer.send(message);
 
-			consumer.close();
+			producer.close();
 			session.close();
 			connection.close();
+			return true;
 		} catch (Exception e) {
 			System.out.println("Caught: " + e);
 			e.printStackTrace();
+			return false;
 		}
 	}
 
 	public synchronized void onException(JMSException ex) {
-		System.out.println("JMS Exception occured.  Shutting down client.");
+		System.out.println("JMS Exception occured.");
 	}
+
 }

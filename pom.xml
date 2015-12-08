@@ -8,7 +8,17 @@
 	<name>JMS-Sample</name>
 	<properties>
 		<activemq.version>5.13.0</activemq.version>
+		<slf4j.version>1.7.7</slf4j.version>
+		<logback.version>1.1.1</logback.version>
+		<java.version>1.7</java.version>
 	</properties>
+	
+	    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.2.4.RELEASE</version>
+    </parent>
+    
 	<modules>
 		<module>jms-producer</module>
 		<module>jms-consumer</module>
@@ -25,7 +35,31 @@
 			<artifactId>activemq-kahadb-store</artifactId>
 			<version>${activemq.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>${slf4j.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>ch.qos.logback</groupId>
+			<artifactId>logback-classic</artifactId>
+			<version>${logback.version}</version>
+		</dependency>
+
+
 
 
 	</dependencies>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>
