@@ -1,4 +1,4 @@
-package com.cinq.rh.jms.resource;
+package com.cinq.hr.jms.resource;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
@@ -14,7 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
-import com.cinq.rh.jms.Client;
+import com.cinq.hr.jms.Client;
 
 @Path("/greet")
 @Component

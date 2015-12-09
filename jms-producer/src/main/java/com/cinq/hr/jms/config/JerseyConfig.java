@@ -1,9 +1,9 @@
-package com.cinq.rh.jms.config;
+package com.cinq.hr.jms.config;
 
 import org.glassfish.jersey.server.ResourceConfig;
 import org.springframework.stereotype.Component;
 
-import com.cinq.rh.jms.resource.GreetResource;
+import com.cinq.hr.jms.resource.GreetResource;
 
 @Component
 public class JerseyConfig extends ResourceConfig {

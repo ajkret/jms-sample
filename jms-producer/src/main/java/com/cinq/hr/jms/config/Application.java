@@ -1,4 +1,4 @@
-package com.cinq.rh.jms.config;
+package com.cinq.hr.jms.config;
 
 import java.io.IOException;
 import java.util.Arrays;

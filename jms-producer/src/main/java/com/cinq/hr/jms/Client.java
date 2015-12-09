@@ -1,4 +1,4 @@
-package com.cinq.rh.jms;
+package com.cinq.hr.jms;
 
 import java.util.Properties;
 
